@@ -1,0 +1,15 @@
+- name: change SELinux security policy to enforcing mode
+
+  vars:
+    current_mode: "Current mode:                   enforcing"
+  hosts: all
+  gather_facts: no
+  become: yes
+  become_method: sudo
+
+  tasks:
+    - name: set current SELinux mode to enforcing
+      command: setenforce 1
+
+    - name: change SELinux conf file
+      command: sed -i -e 's,SELINUX=permissive,SELINUX=enforcing,;' /etc/sysconfig/selinux
