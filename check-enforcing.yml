@@ -1,22 +1,17 @@
 - name: check selinux enforce
 
-  vars:
-    current_mode: "Current mode:                   enforcing"
   hosts: all
   gather_facts: no
-  
+
   tasks:
     - name: get sestatus
-      command: sestatus
+      command: getenforce
       register: sestatus
       become: yes
       become_method: sudo
 
     - name: fail if selinux is not set to enforcing
-
       fail:
         msg: "selinux not enabled"
-
       when:
-        - current_mode not in sestatus.stdout
-
+        - 'Enforcing' not in sestatus.stdout
