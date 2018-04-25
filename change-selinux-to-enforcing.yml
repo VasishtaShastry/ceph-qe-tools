@@ -10,6 +10,4 @@
       command: setenforce 1
 
     - name: change SELinux conf file
-      command: sed -i -e 's,SELINUX=permissive,SELINUX=enforcing,;' /etc/sysconfig/selinux
-
-
+      command: sed -i -e 's,SELINUX=permissive,SELINUX=enforcing,;' /etc/selinux/config
