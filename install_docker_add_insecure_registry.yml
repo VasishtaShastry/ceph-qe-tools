@@ -1,0 +1,25 @@
+- name: install docker and add a registry name to the list of insecure registry list
+
+  hosts: all
+  vars:
+      reg_name: " "  #insecure 
+  gather_facts: no
+  become: yes
+  become_method: sudo
+
+  tasks:
+
+    - name: install docker
+      package:
+        name: docker
+        state: present
+
+    - name: Fail if registry name is not set
+      fail:
+        msg: "Please mention registry name - reg_name"
+      when:
+        - reg_name == " "
+
+    - name: add registry name to the list of insecure registry
+      shell: >
+             echo -e "{\n\t\"insecure-registries\" : [ \"{{ reg_name }}\" ]\n}" > /etc/docker/daemon.json
