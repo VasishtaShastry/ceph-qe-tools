@@ -23,3 +23,9 @@
     - name: add registry name to the list of insecure registry
       shell: >
              echo -e "{\n\t\"insecure-registries\" : [ \"{{ reg_name }}\" ]\n}" > /etc/docker/daemon.json
+             
+    - name: restart docker
+      service:
+         name: docker
+         state: restarted
+         enabled: yes
