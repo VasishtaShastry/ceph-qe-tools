@@ -19,11 +19,29 @@
       when:
         - insecure_registries == "empty"
 
+    - name: set_fact original_content
+      set_fact:
+        original_content: "{{ lookup('file', '/etc/docker/daemon.json') | from_json }}"
+
+    - name: set_fact original_insecure_registries
+      set_fact:
+        original_insecure_registries: "{{ original_content.get('insecure-registries') }}"
+      when: not original_content.get('insecure_registries', False)
+
+    - name: set_fact merged_insecure_registries
+      set_fact:
+        merged_insecure_registries: "{{ insecure_registries }} + {{ original_insecure_registries | difference(insecure_registries) }}"
+      when: not original_content.get('insecure_registries', False)
+
+    - name: new_content
+      set_fact:
+        new_content: "{{ '{ \"insecure-registries\": insecure_registries }' if not original_content.get('insecure-registries', False) else '{ \"insecure-registries\": insecure_registries + merged_insecure_registries }' }}"
 
     - name: add registry name to the list of insecure registry
-      shell: >
-             echo -e "{\n\t\"insecure-registries\" : [ \"{{ reg_name }}\" ]\n}" > /etc/docker/daemon.json
-             
+      copy:
+        dest: /etc/docker/daemon.json
+        content: "{{ new_content }}"
+
     - name: restart docker
       service:
          name: docker
