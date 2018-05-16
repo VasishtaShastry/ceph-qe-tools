@@ -13,7 +13,7 @@
         name: docker
         state: present
 
-    - name: Fail if registry name is not set
+    - name: fail if registry name is not set
       fail:
         msg: "Please mention registry name - reg_name"
       when:
