@@ -15,7 +15,7 @@
 
     - name: fail if registry name is not set
       fail:
-        msg: "Please mention registry name - reg_name"
+        msg: "Please mention registry name - insecure_registries"
       when:
         - insecure_registries == "empty"
 
