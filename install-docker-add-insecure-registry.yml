@@ -2,7 +2,7 @@
 
   hosts: all
   vars:
-      reg_name: " "  #insecure 
+      insecure_registries: "empty"  #insecure
   gather_facts: no
   become: yes
   become_method: sudo
@@ -18,7 +18,8 @@
       fail:
         msg: "Please mention registry name - reg_name"
       when:
-        - reg_name == " "
+        - insecure_registries == "empty"
+
 
     - name: add registry name to the list of insecure registry
       shell: >
