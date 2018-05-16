@@ -41,7 +41,9 @@
       copy:
         dest: /etc/docker/daemon.json
         content: "{{ new_content }}"
+        notify: restart docker
 
+  handlers:
     - name: restart docker
       service:
          name: docker
